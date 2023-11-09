@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pages Bundle - SINPROJOVEM SIAFI:</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- <h2>Tabs</h2>
+    <p>Click on the buttons inside the tabbed menu:</p> -->
+
+    <div class="tab">
+        <button id="btnDownload" type="button" onclick="downloadDataFields()"><svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                <path
+                    d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
+                <path
+                    d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+            </svg></button>
+    </div>
+    <br>
+    <!-- SECTIONS -->
+    <div id="main"></div>
+
+    <script> // NAVTABS
+
+        function openPage(evt, pageKey) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByTagName("section");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(pageKey).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+    </script>
+
+    <!-- <script> // DYNAMIC TABLE => META ARCOS
+
+        function disableAllInputs() {
+            document.querySelectorAll('input').forEach(e => e.setAttribute('disabled', ""))
+        }
+
+        function addColsMetaQualificacao() {
+            var TableMetaQualificacao = document.querySelector('#divMetaQualificacao')
+            TableMetaQualificacao.querySelectorAll('tr')[0].querySelectorAll('td')[2].insertAdjacentHTML('afterend', '<td align="center">Alterações (+/-)</td><td align="center">Meta Final</td>')
+            TableMetaQualificacao.querySelectorAll('tr').forEach((e, i) => (i > 0) ? e.querySelectorAll('td')[2].insertAdjacentHTML('afterend', '<td class="texto" align="center" contenteditable="true">0</td>' + e.querySelectorAll('td')[2].outerHTML) : console.log('ops'))
+            setTimeout(function () {
+                var listTDTarget = document.querySelectorAll('#divMetaQualificacao > table:nth-child(1) > tbody:nth-child(1) > tr > td:nth-child(4)')
+                listTDTarget.forEach(tdTarget => tdTarget.addEventListener('focusout', function () { tdTarget.nextElementSibling.innerText = parseInt(tdTarget.previousElementSibling.innerText) + parseInt(tdTarget.innerText) }))
+            }, 3000)
+            document.querySelector('#NRJovensArcoOcupacional').insertAdjacentHTML('afterend', '<button type="button" onclick="addArcoSelected()">Add</button>')
+        }
+
+        window.onload = (event) => {
+            addColsMetaQualificacao()
+            disableAllInputs()
+        }
+
+        // =========================================================================
+
+        // INCLUDE NEW ARCOS
+        function addArcoSelected() {
+            var selectArco = document.querySelector('#IDArcoOcupacional').selectedIndex
+            var valueArco = document.querySelector('#IDArcoOcupacional').value
+            var titleArco = document.querySelector('#IDArcoOcupacional').options[selectArco].text
+            var metaJovens = document.querySelector('#NRJovensArcoOcupacional').value
+            var htmlRowArcoSelected =
+                `<tr class="tblinha arco_incluido">
+                <td class="texto" align="center">${titleArco}</td>
+                <td class="texto" align="center">250</td>
+                <td class="texto" align="center">0</td>
+                <td class="texto" contenteditable="true" align="center">${metaJovens}</td>
+                <td class="texto" align="center">${metaJovens}</td>
+                <td class="texto" align="center">
+                <img alt="Remover" onclick="removeArcoIncluido(nodeClicked)" style="CURSOR: pointer"></td>
+                </tr>`
+            if (valueArco !== '' && metaJovens !== '' && isNaN(metaJovens) === false) {
+                document.querySelector('#divMetaQualificacao tbody').insertAdjacentHTML('beforeend', htmlRowArcoSelected)
+                console.log(htmlRowArcoSelected)
+                setTimeout(function () {
+                    var listTDTarget = document.querySelectorAll('#divMetaQualificacao > table:nth-child(1) > tbody:nth-child(1) > tr > td:nth-child(4)')
+                    var tdTarget = listTDTarget[listTDTarget.length - 1]
+                    tdTarget.addEventListener('focusout', function () { tdTarget.nextElementSibling.innerText = parseInt(tdTarget.previousElementSibling.innerText) + parseInt(tdTarget.innerText) })
+                }, 3000)
+                metaJovens = ''
+            } else {
+                alert('Any field empty or type is wrong!')
+            }
+            // 	console.log(htmlRowArcoSelected)
+        }
+
+        // LISTENER ELEMENTS CLICKEDS TO REMOVO AFTER
+        var nodeClicked = ''
+        document.addEventListener('click', function (e) {
+            e = e || window.event;
+            var targetClicked = e.target || e.srcElement, // <= OR FOR THAT!
+                text = targetClicked.textContent || targetClicked.innerText;
+            nodeClicked = targetClicked
+        }, false);
+
+        // REMOVE ARCO INCLUIDO
+        function removeArcoIncluido(nodeClicked) {
+            nodeClicked.parentElement.parentElement.classList.contains("arco_incluido") ? nodeClicked.parentElement.parentElement.remove() : ''
+        }
+
+    </script> -->
+
+    <script>
+        function downloadDataFields() {
+            if (document.querySelectorAll('section#DataFields ul li').length > 0) {
+                var DataFields = { DataFields: Object.fromEntries([...document.querySelectorAll('#DataFields ul li')].map(e => e.innerText.split(' => '))) }
+                var content = JSON.stringify(DataFields)
+                var fileName = "ImportantFields_" + DataFields['DataFields']['NRSIAFI'] + ".json"
+                var contentType = "text/plain"
+                var a = document.createElement("a");
+                var file = new Blob([content], { type: contentType });
+                a.href = URL.createObjectURL(file);
+                a.download = fileName;
+                a.click()
+            }
+            else { alert("There not DataFields!") }
+        }
+    </script>
+
+</body>
+
+</html>
